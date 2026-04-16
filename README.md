@@ -16,11 +16,12 @@ The frontend is now substantially more reliable for Sepolia testing than the ear
 
 ## Contract Context
 
-The frontend is connected to three Sepolia contracts:
+The frontend is connected to four Sepolia contracts:
 
 - MockUSDC — mock 6-decimal ERC-20 underlying asset used for testing
-- VaultT — ERC-4626 vault
-- VaultD — ERC-4626 vault [cite:3]
+- VaultT — ERC-4626 vault (routes to VaultMockYield for yield)
+- VaultD — ERC-4626 vault
+- VaultMockYield — mock yield source for mint-backed testing [cite:3]
 
 ## What Changed
 
@@ -112,7 +113,7 @@ pnpm dev
 ```
 
 Make sure `.env.local` includes:
-- `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID`
+- `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID`
 - `NEXT_PUBLIC_SEPOLIA_RPC_URL`
 
 Then open the app, connect a wallet, switch to Sepolia if needed, and test the deposit / withdraw flow with a small amount first. [web:20][web:183][web:156]
