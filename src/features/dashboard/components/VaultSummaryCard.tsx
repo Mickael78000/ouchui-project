@@ -1,5 +1,5 @@
 import { type Address } from 'viem';
-import { useVaultData, fmt } from '../../../hooks/useVaultData';
+import { useVaultData, fmt } from '../../vaults/hooks/useVaultData';
 import { MetricCard } from '../../../shared/ui/MetricCard';
 
 interface VaultSummaryCardProps {

@@ -1,6 +1,6 @@
 import { type Address } from 'viem';
 import { useReadContract, useChainId } from 'wagmi';
-import { useVaultData, fmt } from '../../../hooks/useVaultData';
+import { useVaultData, fmt } from '../../vaults/hooks/useVaultData';
 import { MetricCard } from '../../../shared/ui/MetricCard';
 import { vaultMockYieldAbi } from '../../../shared/contracts/VaultMockYieldAbi';
 import { getAddresses } from '../../../shared/config/contracts';
