@@ -44,21 +44,24 @@ Le projet adopte une architecture **feature‑based** pour favoriser la scalabil
 
 ```txt
 src/
+├── config/             # Configuration chaînes et wagmi
 ├── features/           # Logique métier et UI spécifiques
-│   ├── dashboard/      # Composants de dashboard
+│   ├── dashboard/      # Composants de dashboard (ProtocolMetrics, VaultSummaryCard, StrategyCards)
 │   └── vaults/         # Composants et hooks liés aux vaults
-└── shared/             # Éléments réutilisables
-    ├── ui/             # Composants UI génériques
-    ├── layout/         # Layouts partagés
-    ├── config/         # Configuration (contrats, chaînes, etc.)
-    └── contracts/      # ABI des contrats
+│       └── hooks/      # useVaultData.ts, useVaultActions.ts
+├── pages/              # Pages Next.js (index, dashboard, deposit, withdraw)
+├── shared/             # Éléments réutilisables
+│   ├── ui/             # Composants UI génériques
+│   ├── layout/         # Layouts partagés
+│   ├── config/         # Configuration contrats et ABI
+│   └── contracts/      # ABI TypeScript des contrats
+└── wagmi.ts            # Configuration wagmi/RainbowKit
 ```
 
 ### Conventions d’import
 
-- `@features/*` → logique métier et UI spécifique à un domaine.
-- `@shared/*` → composants, layouts et configuration réutilisables.
-- Pas d’`index.ts` globaux : imports explicites uniquement.
+- **Imports relatifs explicites** : `../features/...`, `../shared/...` (les alias `@features/*` et `@shared/*` sont configurés dans `tsconfig.json` mais non utilisés actuellement).
+- Pas d’`index.ts` globaux : imports explicites vers les fichiers cibles uniquement.
 - Chemins d’import directs pour maximiser la clarté et la traçabilité.
 
 Cette approche garantit une séparation claire des responsabilités, une forte réutilisabilité du code partagé et une maintenance facilitée grâce à des dépendances explicites.
@@ -73,6 +76,8 @@ OUCHUI est connecté à quatre contrats déployés sur **Sepolia** :
 - **VaultT** : vault ERC‑4626, routé vers `VaultMockYield` pour la génération de rendement.
 - **VaultD** : vault ERC‑4626.
 - **VaultMockYield** : source de rendement factice basée sur la frappe, utilisée pour les scénarios de test.
+
+> **ABI** : Les ABI JSON bruts des contrats sont disponibles dans `/abi/` à la racine du projet. Les versions TypeScript utilisées par l'application se trouvent dans `src/shared/contracts/`.
 
 ---
 
@@ -100,10 +105,10 @@ Le cycle de vie des transactions est maintenant aligné sur les bonnes pratiques
 les rafraîchissements d’UI attendent la **confirmation on‑chain** (réception du reçu) plutôt que de se déclencher juste après la signature du portefeuille ou l’obtention du hash de transaction.  
 Les lectures post‑transaction reposent ainsi explicitement sur un état confirmé, ce qui rend les flux d’écriture plus fiables sur testnet.
 
-### Modèle de lecture unifié
+### Modèle de lecture/écriture unifié
 
-Le hook `useVaultData.ts` a été étendu pour regrouper les lectures **orientées utilisateur** (soldes, autorisations) et **orientées vault** (paramètres du vault).  
-Les résultats de multicall sont mappés sur des **champs nommés** plutôt que d’exposer des index fragiles dans les composants UI, ce qui simplifie l’intégration et sécurise la maintenance future.
+- **`useVaultData.ts`** : regroupe les lectures **orientées utilisateur** (soldes, autorisations) et **orientées vault** (paramètres du vault). Les résultats de multicall sont mappés sur des **champs nommés** plutôt que d’exposer des index fragiles.
+- **`useVaultActions.ts`** : centralise les actions d’écriture (approbation, dépôt, retrait, rachat) avec gestion des états de transaction et feedback utilisateur.
 
 ### Aperçu de retrait ERC‑4626 correct
 
