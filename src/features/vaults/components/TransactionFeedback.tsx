@@ -1,5 +1,5 @@
-import type { TxStatus } from '../../hooks/useVaultActions';
-import { StatusMessage } from '../ui/StatusMessage';
+import type { TxStatus } from '../hooks/useVaultActions';
+import { StatusMessage } from '../../../shared/ui/StatusMessage';
 
 interface TransactionFeedbackProps {
   status: TxStatus;

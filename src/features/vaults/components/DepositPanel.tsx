@@ -1,10 +1,10 @@
 import { useState, useCallback, useEffect } from 'react';
 import { type Address, parseUnits } from 'viem';
 import { useChainId } from 'wagmi';
-import { useVaultData, fmt } from '../../hooks/useVaultData';
-import { useVaultActions, parseActionError } from '../../hooks/useVaultActions';
-import { getAddresses } from '../../config/contracts';
-import { AmountInput } from '../ui/AmountInput';
+import { useVaultData, fmt } from '../hooks/useVaultData';
+import { useVaultActions, parseActionError } from '../hooks/useVaultActions';
+import { getAddresses } from '../../../shared/config/contracts';
+import { AmountInput } from '../../../shared/ui/AmountInput';
 import { TransactionFeedback } from './TransactionFeedback';
 
 const DECIMALS = 6;
@@ -83,22 +83,22 @@ export function DepositPanel({ vaultAddress, vaultName }: DepositPanelProps) {
   return (
     <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-6 space-y-5">
       <div>
-        <h3 className="text-base font-semibold text-white">Deposit USDC</h3>
+        <h3 className="text-base font-semibold text-white">Déposer USDC</h3>
         <p className="text-xs text-gray-500 mt-0.5">
-          Deposit USDC into {vaultName} and receive vault shares
+          Déposez USDC dans {vaultName} et recevez des shares de vault
         </p>
       </div>
 
       {/* Balance & Allowance */}
       <div className="space-y-1">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-400">Available USDC</span>
+          <span className="text-gray-400">USDC Disponibles</span>
           <span className="text-white font-mono">
             {isLoading ? '…' : `${fmt(userUsdcBalance)} USDC`}
           </span>
         </div>
         <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-400">Approved for this vault</span>
+          <span className="text-gray-400">Approuvé pour ce vault</span>
           <span className="text-white font-mono">
             {isLoading ? '…' : `${fmt(allowance)} USDC`}
           </span>
@@ -109,7 +109,7 @@ export function DepositPanel({ vaultAddress, vaultName }: DepositPanelProps) {
       <AmountInput
         value={amount}
         onChange={setAmount}
-        label="Deposit Amount"
+        label="Montant du Dépôt"
         unit="USDC"
         maxValue={userUsdcBalance}
         decimals={DECIMALS}
@@ -121,7 +121,7 @@ export function DepositPanel({ vaultAddress, vaultName }: DepositPanelProps) {
       {/* Preview */}
       {parsedAmount > 0n && !exceedsBalance && (
         <div className="flex items-center justify-between text-sm rounded-lg bg-gray-800/50 px-3 py-2">
-          <span className="text-gray-400">You will receive (est.)</span>
+          <span className="text-gray-400">Vous recevrez (est.)</span>
           <span className="text-white font-mono">{fmt(previewDeposit)} shares</span>
         </div>
       )}
@@ -138,7 +138,7 @@ export function DepositPanel({ vaultAddress, vaultName }: DepositPanelProps) {
             disabled={!canApprove}
             className="flex-1 rounded-lg bg-gray-700 px-4 py-2.5 text-sm font-medium text-gray-200 hover:bg-gray-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
-            {actions.isPending && lastAction === 'Approve' ? 'Approving…' : `Approve ${amount || '0'} USDC`}
+            {actions.isPending && lastAction === 'Approve' ? 'Approbation…' : `Approuver ${amount || '0'} USDC`}
           </button>
         )}
         <button
@@ -148,7 +148,7 @@ export function DepositPanel({ vaultAddress, vaultName }: DepositPanelProps) {
           disabled={!canDeposit}
           className="flex-1 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
-          {actions.isPending && lastAction === 'Deposit' ? 'Depositing…' : 'Deposit'}
+          {actions.isPending && lastAction === 'Deposit' ? 'Dépôt…' : 'Déposer'}
         </button>
       </div>
 

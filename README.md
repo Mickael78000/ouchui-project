@@ -1,10 +1,14 @@
 # OUCHUI Frontend Update
 
-OUCHUI is a Next.js + React + TypeScript dApp for interacting with ERC-4626 vaults on Sepolia. It uses wagmi + viem for contract reads and writes, RainbowKit for wallet connection, and Tailwind CSS for styling. The current scope is an investor-facing testnet flow: connect a wallet, read vault data, approve MockUSDC, deposit into a vault, and manage share redemption and withdrawal UX. [web:20][web:183][cite:3]
+OUCHUI est une dApp Next.js + React + TypeScript pour interagir avec les vaults ERC-4626 sur Sepolia. Elle utilise wagmi + viem pour les lectures et écritures de contrats, RainbowKit pour la connexion de portefeuille, et Tailwind CSS pour le style. Le périmètre actuel est un flux testnet orienté investisseur : connecter un portefeuille, lire les données du vault, approuver MockUSDC, déposer dans un vault, et gérer le rachat de parts et l'UX de retrait. [web:20][web:183][cite:3]
 
-The frontend is now substantially more reliable for Sepolia testing than the earlier prototype. The transaction lifecycle waits for on-chain receipts before refetching state, the amount-entry UX is hardened, impossible actions are disabled earlier, and wrong-network handling is explicit and recoverable. These changes make the app safer and clearer for testnet use, although it should not yet be described as production-ready. [web:76][web:121][web:143]
+Le frontend est maintenant considérablement plus fiable pour les tests Sepolia que le prototype précédent. Le cycle de vie des transactions attend les reçus on-chain avant de rafraîchir l'état, l'UX de saisie des montants est renforcée, les actions impossibles sont désactivées plus tôt, et la gestion des mauvais réseaux est explicite et récupérable. Ces changements rendent l'application plus sûre et plus claire pour l'utilisation testnet, bien qu'elle ne devrait pas encore être décrite comme prête pour la production. [web:76][web:121][web:143]
 
-## Stack
+## Déploiement
+
+🚀 **Application déployée :** https://ouchui-project.vercel.app/
+
+## Stack Technique
 
 - Next.js
 - React
@@ -14,110 +18,137 @@ The frontend is now substantially more reliable for Sepolia testing than the ear
 - RainbowKit
 - Tailwind CSS [web:20][web:170]
 
-## Contract Context
+## Architecture du Code
 
-The frontend is connected to four Sepolia contracts:
+Le projet utilise une architecture feature-based pour une meilleure scalabilité et maintenabilité :
 
-- MockUSDC — mock 6-decimal ERC-20 underlying asset used for testing
-- VaultT — ERC-4626 vault (routes to VaultMockYield for yield)
-- VaultD — ERC-4626 vault
-- VaultMockYield — mock yield source for mint-backed testing [cite:3]
+```
+src/
+├── features/           # Logique métier et UI spécifique
+│   ├── dashboard/      # Composants dashboard
+│   └── vaults/         # Composants et hooks vaults
+└── shared/             # Éléments réutilisables
+    ├── ui/            # Composants UI génériques
+    ├── layout/        # Layouts partagés
+    ├── config/        # Configuration contrats
+    └── contracts/     # ABI des contrats
+```
 
-## What Changed
+### Conventions d'Imports
 
-### Receipt-based writes
+- **`@features/*`** → Logique métier et UI spécifique à un domaine
+- **`@shared/*`** → Composants, layouts et configuration réutilisables
+- **Pas d'index.ts globaux** → Imports explicites uniquement
+- **Chemins directs** → Privilégier la clarté et la traçabilité
 
-The transaction flow was upgraded so UI refreshes happen only after on-chain confirmation, not immediately after the wallet signs or the transaction hash is returned. This is the correct pattern for wagmi-based write flows because post-transaction reads should depend on receipt confirmation, not only submission state. [web:76][web:78]
+Cette approche garantit :
+- Séparation claire des responsabilités
+- Réutilisabilité maximale du code partagé
+- Maintenance facilitée avec des dépendances explicites
 
-`useVaultActions.ts` now exposes a clearer transaction lifecycle, with explicit states for idle, signing, confirming, confirmed, and error. This lets the UI distinguish wallet interaction from chain confirmation and avoids misleading success feedback before the transaction is actually mined. [web:76]
+## Contexte des Contrats
 
-### Better read model
+Le frontend est connecté à quatre contrats Sepolia :
 
-`useVaultData.ts` was expanded so user-facing reads and vault-facing reads refresh together. The hook now includes allowance reading for the deposit flow and uses named return fields instead of leaking fragile multicall index assumptions into UI components. Mapping multicall results into named fields is a cleaner integration pattern and makes later maintenance safer. [web:78][web:167]
+- MockUSDC — actif sous-jacent ERC-20 factice à 6 décimales utilisé pour les tests
+- VaultT — vault ERC-4626 (route vers VaultMockYield pour le rendement)
+- VaultD — vault ERC-4626
+- VaultMockYield — source de rendement factice pour les tests basés sur la frappe [cite:3]
 
-### Correct ERC-4626 withdrawal preview
+## Ce Qui a Changé
 
-The withdraw flow now uses `previewWithdraw(assets)` for the estimated “shares to burn” view, which is the standards-aligned ERC-4626 preview for asset-based withdrawals at the current block. This is more correct than using a generic conversion helper for the same UI purpose. [web:75][web:94]
+### Écritures basées sur les reçus
 
-### Clearer transaction feedback
+Le flux de transactions a été mis à niveau pour que les rafraîchissements de l'UI n'aient lieu qu'après confirmation on-chain, pas immédiatement après la signature du portefeuille ou le retour du hash de transaction. C'est le modèle correct pour les flux d'écriture basés sur wagmi car les lectures post-transaction doivent dépendre de la confirmation du reçu, pas seulement de l'état de soumission. [web:76][web:78]
 
-Transaction feedback now distinguishes:
-- waiting for wallet signature,
-- submitted and awaiting on-chain confirmation,
-- confirmed on-chain. [web:76]
 
-That wording is deliberately more precise because wallet approval and chain confirmation are not the same event. [web:76]
+### Meilleur modèle de lecture
 
-### Safer network behavior
+`useVaultData.ts` a été étendu pour que les lectures orientées utilisateur et les lectures orientées vault se rafraîchissent ensemble. Le hook inclut maintenant la lecture des autorisations pour le flux de dépôt et utilise des champs de retour nommés au lieu de divulguer des hypothèses fragiles d'index multicall dans les composants UI. Mapper les résultats multicall en champs nommés est un modèle d'intégration plus propre et rend la maintenance ultérieure plus sûre. [web:78][web:167]
 
-Sepolia is now the primary chain in the wagmi configuration. Wrong-network states are no longer passive: the UI presents a “Switch to Sepolia” action and falls back to a clear manual-switch message if the automatic request fails. Automatic chain switching is helpful but not guaranteed across all wallets, so the manual fallback remains important. [web:121][web:143]
+### Aperçu de retrait ERC-4626 correct
 
-## UX Improvements
+Le flux de retrait utilise maintenant `previewWithdraw(assets)` pour la vue "parts à brûler" estimée, qui est l'aperçu ERC-4626 conforme aux normes pour les retraits basés sur les actifs au bloc actuel. C'est plus correct que d'utiliser un assistant de conversion générique pour le même objectif UI. [web:75][web:94]
 
-### Amount input hardening
+### Feedback de transaction plus clair
 
-A reusable `AmountInput` component was introduced for deposit and withdrawal actions. It uses a controlled text input with `inputMode="decimal"` rather than relying on browser number inputs, which improves numeric entry behavior for financial amounts and avoids browser-specific quirks such as spinners and scientific notation entry. [web:132][web:129]
+Le feedback de transaction distingue maintenant :
+- attente de la signature du portefeuille,
+- soumis et attente de confirmation on-chain,
+- confirmé on-chain. [web:76]
 
-The input sanitization preserves natural intermediate typing states such as `""`, `"."`, `"0."`, and trailing decimal zeros while still enforcing a single decimal point and a 6-decimal precision limit for the MockUSDC-based flow. This produces a more natural typing experience without relaxing amount safety. [web:142][cite:3]
+Cette formulation est délibérément plus précise car l'approbation du portefeuille et la confirmation de chaîne ne sont pas le même événement. [web:76]
 
-### Max buttons and validation
+### Comportement réseau plus sûr
 
-Deposit and withdraw/redeem flows now support Max-button behavior and stronger inline validation. The UI prevents obviously invalid actions before submission, such as trying to deposit more USDC than the wallet holds or attempting to withdraw/redeem beyond the available position. Good dApp UX should block avoidable failures before they reach the chain whenever the app already has enough local information to know the action will fail. [web:116][web:127]
+Sepolia est maintenant la chaîne principale dans la configuration wagmi. Les états de mauvais réseau ne sont plus passifs : l'UI présente une action "Basculer vers Sepolia" et revient à un message de basculement manuel clair si la demande automatique échoue. Le basculement automatique de chaîne est utile mais n'est pas garanti sur tous les portefeuilles, donc le repli manuel reste important. [web:121][web:143]
 
-### Better empty and pending states
+## Améliorations UX
 
-The withdraw panel now handles a zero-share state explicitly by telling the user they have no shares yet and should deposit first. Pending transaction states also use clearer action labels such as “Approving…”, “Depositing…”, “Redeeming…”, and “Withdrawing…”, making the interface more readable during transaction progress. [web:127]
+### Renforcement de la saisie des montants
 
-Confirmed states no longer linger indefinitely. Success feedback is auto-cleared after a short delay so users can continue to the next action without stale confirmation banners dominating the panel. [web:127]
+Un composant `AmountInput` réutilisable a été introduit pour les actions de dépôt et de retrait. Il utilise une saisie de texte contrôlée avec `inputMode="decimal"` plutôt que de s'appuyer sur les saisies numériques du navigateur, ce qui améliore le comportement de saisie numérique pour les montants financiers et évite les particularités spécifiques au navigateur telles que les spinners et la saisie en notation scientifique. [web:132][web:129]
 
-## RPC Reliability
+La désinfection de la saisie préserve les états de frappe intermédiaires naturels tels que `""`, `"."`, `"0."` et les zéros décimaux de fin tout en appliquant toujours un point décimal unique et une limite de précision de 6 décimales pour le flux basé sur MockUSDC. Cela produit une expérience de frappe plus naturelle sans relâcher la sécurité des montants. [web:142][cite:3]
 
-The original public Sepolia RPC path was replaced with an Alchemy Sepolia endpoint via environment configuration. This is a practical stability improvement because public Sepolia endpoints are often rate-limited or unreliable, while a dedicated RPC provider gives more predictable frontend behavior during testing. [web:156][web:158]
+### Boutons Max et validation
 
-## Verified Sepolia Flow
+Les flux de dépôt et de retrait/rachat supportent maintenant le comportement du bouton Max et une validation en ligne plus forte. L'UI empêche les actions évidemment invalides avant soumission, comme essayer de déposer plus d'USDC que le portefeuille ne détient ou tenter de retirer/racheter au-delà de la position disponible. Une bonne UX dApp devrait bloquer les échecs évitables avant qu'ils n'atteignent la chaîne chaque fois que l'application a suffisamment d'informations locales pour savoir que l'action échouera. [web:116][web:127]
 
-The approve and deposit path has been verified end-to-end on Sepolia:
+### Meilleurs états vides et en attente
 
-1. MockUSDC was minted to the test wallet
-2. The wallet connected through the frontend on Sepolia
-3. Approval was granted for the target vault
-4. A deposit was submitted and confirmed on-chain
-5. Post-deposit balances were verified against on-chain contract reads [cite:3]
+Le panneau de retrait gère maintenant un état de part zéro explicitement en indiquant à l'utilisateur qu'il n'a pas encore de parts et devrait d'abord déposer. Les états de transaction en attente utilisent également des étiquettes d'action plus claires comme "Approbation…", "Dépôt…", "Rachat…" et "Retrait…", rendant l'interface plus lisible pendant la progression de la transaction. [web:127]
 
-The verified post-deposit state showed:
-- vault share balance updated as expected,
-- vault `totalAssets()` reflected the deposit,
-- wallet USDC balance decreased by the deposited amount. [cite:3]
+Les états confirmés ne persistent plus indéfiniment. Le feedback de succès est automatiquement effacé après un court délai pour que les utilisateurs puissent continuer à l'action suivante sans que des bannières de confirmation obsolètes ne dominent le panneau. [web:127]
 
-## Current Status
+## Fiabilité RPC
 
-This frontend should be considered a solid **Sepolia-ready investor flow iteration**, not a production-ready release. It now has a much more trustworthy transaction lifecycle and significantly better interaction safety, but important work remains before the product can be described as complete. [cite:3]
+Le chemin RPC Sepolia public original a été remplacé par un endpoint Alchemy Sepolia via la configuration de l'environnement. C'est une amélioration pratique de stabilité car les endpoints Sepolia publics sont souvent limités en débit ou peu fiables, tandis qu'un fournisseur RPC dédié donne un comportement frontend plus prévisible pendant les tests. [web:156][web:158]
 
-## Remaining Work
+## Flux Sepolia Vérifié
 
-The following items remain out of scope or incomplete for now:
+Le chemin d'approbation et de dépôt a été vérifié de bout en bout sur Sepolia :
 
-- full KYC enforcement at contract level
-- NAV/oracle-backed valuation
-- tokenized T-Bills integration
-- lending/strategy integration
-- broader automated testing coverage
-- final production deployment hardening
-- confirmation that the full withdraw/redeem path has been executed and verified end-to-end on Sepolia, if that has not yet been done [cite:3]
+1. MockUSDC a été frappé vers le portefeuille de test
+2. Le portefeuille s'est connecté via le frontend sur Sepolia
+3. L'approbation a été accordée pour le vault cible
+4. Un dépôt a été soumis et confirmé on-chain
+5. Les soldes post-dépôt ont été vérifiés contre les lectures de contrats on-chain [cite:3]
 
-## Quick Start
+L'état post-dépôt vérifié a montré :
+- le solde de parts du vault mis à jour comme attendu,
+- le `totalAssets()` du vault reflète le dépôt,
+- le solde USDC du portefeuille a diminué du montant déposé. [cite:3]
+
+## Statut Actuel
+
+Ce frontend devrait être considéré comme une **itération de flux investisseur prête Sepolia** solide, pas une version prête pour la production. Il a maintenant un cycle de vie de transaction beaucoup plus fiable et une sécurité d'interaction significativement meilleure, mais un travail important reste avant que le produit puisse être décrit comme complet. [cite:3]
+
+## Travail Restant
+
+Les éléments suivants restent hors périmètre ou incomplets pour le moment :
+
+- application complète du KYC au niveau des contrats
+- évaluation soutenue par NAV/oracle
+- intégration des T-Bills tokenisés
+- intégration prêt/stratégie
+- couverture de tests automatisés plus large
+- durcissement du déploiement de production final
+- confirmation que le chemin de retrait/rachat complet a été exécuté et vérifié de bout en bout sur Sepolia, si ce n'est pas encore fait [cite:3]
+
+## Démarrage Rapide
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
-Make sure `.env.local` includes:
+Assurez-vous que `.env.local` inclut :
 - `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID`
 - `NEXT_PUBLIC_SEPOLIA_RPC_URL`
 
-Then open the app, connect a wallet, switch to Sepolia if needed, and test the deposit / withdraw flow with a small amount first. [web:20][web:183][web:156]
+Ensuite ouvrez l'application, connectez un portefeuille, basculez vers Sepolia si nécessaire, et testez le flux de dépôt / retrait avec un petit montant d'abord. [web:20][web:183][web:156]
 
 ## Notes
 
-Where ERC-4626 previews are used, the frontend now prefers the semantically correct preview functions for user-facing estimates. This improves clarity, but the UI should still be treated as a convenience layer over the contracts rather than a substitute for protocol-level guarantees. [web:75][web:94]
+Lorsque les aperçus ERC-4626 sont utilisés, le frontend préfère maintenant les fonctions d'aperçu sémantiquement correctes pour les estimations orientées utilisateur. Cela améliore la clarté, mais l'UI devrait toujours être traitée comme une couche de commodité sur les contrats plutôt qu'un substitut aux garanties au niveau du protocole. [web:75][web:94]

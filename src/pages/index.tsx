@@ -1,89 +1,89 @@
 import type { NextPage } from 'next';
 import Link from 'next/link';
-import { AppShell } from '../components/layout/AppShell';
-import { FeatureCard } from '../components/ui/FeatureCard';
-import { SectionHeader } from '../components/ui/SectionHeader';
+import { AppShell } from '../shared/layout/AppShell';
+import { FeatureCard } from '../shared/ui/FeatureCard';
+import { SectionHeader } from '../shared/ui/SectionHeader';
 
 const investorFeatures = [
   {
-    title: 'KYC & Security',
+    title: 'KYC & Sécurité',
     description:
-      'Mandatory identity verification before any deposit, securing access to the protocol and ensuring regulatory compliance.',
+      'Vérification d\'identité obligatoire avant tout dépôt, sécurisant l\'accès au protocole et garantissant la conformité réglementaire.',
   },
   {
-    title: 'Token Issuance',
+    title: 'Émission de Tokens',
     description:
-      'Automatic issuance of OUCHUI tokens (ERC-20) in exact proportion to your USDC deposit, serving as on-chain proof of participation.',
+      'Émission automatique de tokens OUCHUI (ERC-20) en proportion exacte de votre dépôt USDC, servant comme preuve de participation on-chain.',
   },
   {
-    title: 'Real-Time NAV',
+    title: 'NAV en Temps Réel',
     description:
-      'Live Net Asset Value (NAV) tracking for your tokens, providing precise visibility into the current value of your position.',
+      'Suivi en direct de la Valeur Nette d\'Actifs (NAV) pour vos tokens, offrant une visibilité précise sur la valeur actuelle de votre position.',
   },
   {
-    title: 'Smart Contract Lending',
+    title: 'Prêt via Smart Contracts',
     description:
-      'Lend your funds through secured smart contracts to earn transparent, verifiable yield.',
+      'Prêtez vos fonds via des smart contracts sécurisés pour gagner un rendement transparent et vérifiable.',
   },
   {
-    title: 'On-Chain Indicators',
+    title: 'Indicateurs On-Chain',
     description:
-      'Access a financial dashboard with TVL, liquidity, exposure, and yield metrics to evaluate the health of your investment.',
+      'Accédez à un dashboard financier avec des métriques TVL, liquidité, exposition et rendement pour évaluer la santé de votre investissement.',
   },
   {
-    title: 'Liquidity & Withdrawals',
+    title: 'Liquidité & Retraits',
     description:
-      'Retrieve your USDC at any time through an optimized liquidity reserve, enabling unrestricted exits.',
+      'Récupérez vos USDC à tout moment via une réserve de liquidité optimisée, permettant des sorties sans restriction.',
   },
   {
-    title: 'T-Bills Optimization',
+    title: 'Optimisation T-Bills',
     description:
-      'Idle capital is automatically invested in tokenized T-Bills, generating continuous and secured yield.',
+      'Le capital inactif est automatiquement investi dans des T-Bills tokenisés, générant un rendement continu et sécurisé.',
   },
   {
-    title: 'Collateralization',
+    title: 'Collatéralisation',
     description:
-      'T-Bills serve as collateral for borrowing USDC, enabling lending loops to amplify returns.',
+      'Les T-Bills servent de collatéral pour emprunter des USDC, permettant des boucles de prêt pour amplifier les rendements.',
   },
   {
-    title: 'Strategy Transparency',
+    title: 'Transparence de la Stratégie',
     description:
-      'Clear visualization of the DeFi strategy, explaining the origin of yields and the protection mechanisms in place.',
+      'Visualisation claire de la stratégie DeFi, expliquant l\'origine des rendements et les mécanismes de protection en place.',
   },
 ];
 
 const Home: NextPage = () => {
   return (
     <AppShell
-      title="OUCHUI — Healthcare Infrastructure Financing"
-      description="Real-time medical equipment tracking financed through DeFi infrastructure"
+      title="OUCHUI — Financement d'Infrastructure Santé"
+      description="Suivi d'équipements médicaux en temps réel financé via infrastructure DeFi"
     >
       {/* Hero */}
       <section className="border-b border-gray-800">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
           <p className="text-indigo-400 text-sm font-medium tracking-wide uppercase mb-3">
-            Healthcare Infrastructure · DeFi Financing
+            Infrastructure Santé · Financement DeFi
           </p>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight max-w-3xl">
-            Real-time medical equipment tracking, financed through institutional-grade DeFi
+            Suivi d'équipements médicaux en temps réel, financé via DeFi institutionnelle
           </h1>
           <p className="mt-6 text-gray-400 text-base sm:text-lg max-w-2xl leading-relaxed">
-            OUCHUI provides hospitals with a fully managed, real-time equipment
-            localization service — accessible from any smartphone — while offering
-            institutional investors transparent, on-chain yield through ERC-4626 vaults.
+            OUCHUI fournit aux hôpitaux un service de localisation d'équipements
+            entièrement géré et en temps réel — accessible depuis tout smartphone — tout en offrant
+            aux investisseurs institutionnels un rendement on-chain transparent via des vaults ERC-4626.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/dashboard"
               className="inline-flex items-center rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 transition-colors"
             >
-              View Dashboard
+              Voir Dashboard
             </Link>
             <Link
               href="/deposit"
               className="inline-flex items-center rounded-lg border border-gray-700 bg-gray-900 px-5 py-2.5 text-sm font-semibold text-gray-200 hover:bg-gray-800 hover:border-gray-600 transition-colors"
             >
-              Deposit / Withdraw
+              Dépôt / Retrait
             </Link>
           </div>
         </div>
@@ -93,36 +93,36 @@ const Home: NextPage = () => {
       <section className="border-b border-gray-800">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16">
           <SectionHeader
-            title="Healthcare Operations"
-            subtitle="The operational foundation powering real-world impact"
+            title="Opérations Santé"
+            subtitle="La fondation opérationnelle alimentant l'impact réel"
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm text-gray-300 leading-relaxed">
             <div className="space-y-4">
               <p>
-                OUCHUI delivers a real-time localization service for medical
-                equipment inside healthcare facilities. The solution is
-                smartphone-accessible and complemented by a management dashboard
-                to optimize internal logistics and asset utilization.
+                OUCHUI fournit un service de localisation en temps réel pour les équipements
+                médicaux dans les établissements de santé. La solution est
+                accessible via smartphone et complétée par un dashboard de gestion
+                pour optimiser la logistique interne et l'utilisation des actifs.
               </p>
               <p>
-                Hospitals operate under tight investment constraints. OUCHUI
-                addresses this by offering a fully turnkey service billed as a
-                monthly subscription (OPEX), requiring no changes to existing IT
-                infrastructure. All contract and access management is handled by
+                Les hôpitaux opèrent sous des contraintes d'investissement strictes. OUCHUI
+                répond à cela en offrant un service entièrement clé en main facturé comme
+                abonnement mensuel (OPEX), ne nécessitant aucune modification de l'infrastructure IT
+                existante. Toute la gestion des contrats et des accès est assurée par
                 OUCHUI.
               </p>
             </div>
             <div className="space-y-4">
               <p>
-                The commercial engine structures client acquisition through a
-                CRM-driven pipeline, automated proposal generation, electronic
-                signature workflows, and full contract lifecycle tracking with
-                KPIs — including ARR, conversion rate, CAC, and churn.
+                Le moteur commercial structure l'acquisition clients via un
+                pipeline CRM, la génération automatisée de propositions, les workflows
+                de signature électronique, et le suivi complet du cycle de vie des contrats avec
+                des KPIs — incluant ARR, taux de conversion, CAC, et churn.
               </p>
               <p>
-                Security and regulatory compliance are embedded at every level,
-                ensuring data confidentiality for location-sensitive information
-                and strict adherence to the applicable legal framework.
+                La sécurité et la conformité réglementaire sont intégrées à tous les niveaux,
+                garantissant la confidentialité des données pour les informations sensibles de localisation
+                et le respect strict du cadre légal applicable.
               </p>
             </div>
           </div>
@@ -133,33 +133,33 @@ const Home: NextPage = () => {
       <section className="border-b border-gray-800">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16">
           <SectionHeader
-            title="DeFi Financing Layer"
-            subtitle="On-chain capital infrastructure for OUCHUI operations"
+            title="Couche de Financement DeFi"
+            subtitle="Infrastructure de capital on-chain pour les opérations OUCHUI"
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm text-gray-300 leading-relaxed">
             <div className="space-y-4">
               <p>
-                A dedicated DeFi financing layer enables the issuance of OUCHUI
-                tokens (ERC-20) to investors who deposit USDC. A real-time NAV
-                calculation and smart-contract-based lending mechanisms provide
-                full transparency through on-chain indicators.
+                Une couche de financement DeFi dédiée permet l'émission de tokens
+                OUCHUI (ERC-20) aux investisseurs qui déposent USDC. Un calcul NAV
+                en temps réel et des mécanismes de prêt via smart contracts fournissent
+                une transparence complète via des indicateurs on-chain.
               </p>
               <p>
-                Investors receive vault shares proportional to their deposit,
-                tracked and verifiable entirely on-chain via ERC-4626 tokenized
-                vaults.
+                Les investisseurs reçoivent des shares de vault proportionnels à leur dépôt,
+                suivis et vérifiables entièrement on-chain via des vaults tokenisés
+                ERC-4626.
               </p>
             </div>
             <div className="space-y-4">
               <p>
-                Undeployed treasury capital is automatically optimized by
-                investing in tokenized T-Bills, which also serve as a liquidity
-                reserve for investor withdrawals.
+                Le capital de trésorerie non déployé est automatiquement optimisé en
+                investissant dans des T-Bills tokenisés, qui servent également de réserve
+                de liquidité pour les retraits des investisseurs.
               </p>
               <p>
-                A potential lending loop further amplifies yield by using T-Bill
-                positions as collateral to borrow additional USDC, creating a
-                capital-efficient cycle while maintaining withdrawal liquidity.
+                Une boucle de prêt potentielle amplifie davantage le rendement en utilisant les positions
+                T-Bill comme collatéral pour emprunter des USDC supplémentaires, créant
+                un cycle efficace en capital tout en maintenant la liquidité de retrait.
               </p>
             </div>
           </div>
@@ -170,8 +170,8 @@ const Home: NextPage = () => {
       <section className="border-b border-gray-800">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16">
           <SectionHeader
-            title="Investor Features"
-            subtitle="Protocol capabilities for liquidity providers"
+            title="Fonctionnalités Investisseur"
+            subtitle="Capacités du protocole pour les fournisseurs de liquidité"
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {investorFeatures.map((f) => (
@@ -185,29 +185,29 @@ const Home: NextPage = () => {
       <section>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16">
           <SectionHeader
-            title="Security & Compliance"
-            subtitle="Built for institutional-grade trust"
+            title="Sécurité & Conformité"
+            subtitle="Conçu pour la confiance institutionnelle"
           />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-gray-300 leading-relaxed">
             <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-5">
-              <h3 className="text-sm font-semibold text-white mb-2">Regulatory Compliance</h3>
+              <h3 className="text-sm font-semibold text-white mb-2">Conformité Réglementaire</h3>
               <p>
-                All investor interactions are subject to KYC verification.
-                The protocol operates within a clearly defined legal perimeter.
+                Toutes les interactions investisseur sont soumises à vérification KYC.
+                Le protocole opère dans un périmètre légal clairement défini.
               </p>
             </div>
             <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-5">
-              <h3 className="text-sm font-semibold text-white mb-2">Data Confidentiality</h3>
+              <h3 className="text-sm font-semibold text-white mb-2">Confidentialité des Données</h3>
               <p>
-                Location-sensitive data from healthcare facilities is handled
-                with strict confidentiality and access controls.
+                Les données sensibles de localisation des établissements de santé sont traitées
+                avec une confidentialité stricte et des contrôles d'accès.
               </p>
             </div>
             <div className="rounded-xl border border-gray-800 bg-gray-900/40 p-5">
-              <h3 className="text-sm font-semibold text-white mb-2">On-Chain Transparency</h3>
+              <h3 className="text-sm font-semibold text-white mb-2">Transparence On-Chain</h3>
               <p>
-                All capital flows, yields, and positions are verifiable on-chain.
-                Smart contracts are auditable and deterministic.
+                Tous les flux de capital, rendements et positions sont vérifiables on-chain.
+                Les smart contracts sont auditable et déterministes.
               </p>
             </div>
           </div>
@@ -217,13 +217,13 @@ const Home: NextPage = () => {
               href="/dashboard"
               className="inline-flex items-center rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 transition-colors"
             >
-              View Dashboard
+              Voir Dashboard
             </Link>
             <Link
               href="/deposit"
               className="inline-flex items-center rounded-lg border border-gray-700 bg-gray-900 px-5 py-2.5 text-sm font-semibold text-gray-200 hover:bg-gray-800 hover:border-gray-600 transition-colors"
             >
-              Deposit / Withdraw
+              Dépôt / Retrait
             </Link>
           </div>
         </div>

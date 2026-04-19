@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { useAccount, useConfig } from 'wagmi';
 import { writeContract, waitForTransactionReceipt } from 'wagmi/actions';
 import { type Address, parseUnits, maxUint256 } from 'viem';
-import { erc4626Abi, mockUsdcAbi } from '../config/contracts';
+import { erc4626Abi, mockUsdcAbi } from '../../../shared/config/contracts';
 
 const DECIMALS = 6;
 
@@ -54,103 +54,115 @@ export interface VaultActionsState {
 export function useVaultActions(): VaultActionsState {
   const { address: userAddress } = useAccount();
   const config = useConfig();
-
   const [status, setStatus] = useState<TxStatus>('idle');
-  const [txHash, setTxHash] = useState<`0x${string}` | undefined>(undefined);
+  const [txHash, setTxHash] = useState<`0x${string}` | undefined>();
 
   const reset = useCallback(() => {
     setStatus('idle');
     setTxHash(undefined);
   }, []);
 
-  /** Send a write transaction and wait for on-chain receipt before resolving. */
-  const sendAndWait = useCallback(
-    async (params: Parameters<typeof writeContract>[1]) => {
-      setStatus('signing');
-      setTxHash(undefined);
-
+  const execute = useCallback(
+    async (label: string, fn: () => Promise<`0x${string}`>) => {
       try {
-        const hash = await writeContract(config, params);
+        setStatus('signing');
+        reset();
+        const hash = await fn();
         setTxHash(hash);
         setStatus('confirming');
-
-        await waitForTransactionReceipt(config, { hash, confirmations: 1 });
+        await waitForTransactionReceipt(config, { hash });
         setStatus('confirmed');
       } catch (e) {
         setStatus('error');
         throw e;
       }
     },
-    [config]
+    [config, reset]
   );
 
   const approve = useCallback(
     async (assetAddress: Address, vaultAddress: Address, amount?: string) => {
-      const allowance = amount ? parseAmount(amount) : maxUint256;
-      await sendAndWait({
-        address: assetAddress,
-        abi: mockUsdcAbi,
-        functionName: 'approve',
-        args: [vaultAddress, allowance],
-      });
+      if (!userAddress) throw new Error('Wallet not connected');
+      const parsedAmount = amount ? parseAmount(amount) : maxUint256;
+      await execute('Approve', () =>
+        writeContract(config, {
+          address: assetAddress,
+          abi: mockUsdcAbi as any,
+          functionName: 'approve',
+          args: [vaultAddress, parsedAmount],
+          account: userAddress,
+        })
+      );
     },
-    [sendAndWait]
+    [userAddress, config, execute]
   );
 
   const deposit = useCallback(
     async (vaultAddress: Address, amount: string) => {
       if (!userAddress) throw new Error('Wallet not connected');
-      const assets = parseAmount(amount);
-      await sendAndWait({
-        address: vaultAddress,
-        abi: erc4626Abi,
-        functionName: 'deposit',
-        args: [assets, userAddress],
-      });
+      const parsedAmount = parseAmount(amount);
+      await execute('Deposit', () =>
+        writeContract(config, {
+          address: vaultAddress,
+          abi: erc4626Abi as any,
+          functionName: 'deposit',
+          args: [parsedAmount, userAddress],
+          account: userAddress,
+        })
+      );
     },
-    [userAddress, sendAndWait]
+    [userAddress, config, execute]
   );
 
   const mint = useCallback(
     async (vaultAddress: Address, amount: string) => {
       if (!userAddress) throw new Error('Wallet not connected');
-      const shares = parseAmount(amount);
-      await sendAndWait({
-        address: vaultAddress,
-        abi: erc4626Abi,
-        functionName: 'mint',
-        args: [shares, userAddress],
-      });
+      const parsedAmount = parseAmount(amount);
+      await execute('Mint', () =>
+        writeContract(config, {
+          address: vaultAddress,
+          abi: erc4626Abi as any,
+          functionName: 'mint',
+          args: [parsedAmount, userAddress],
+          account: userAddress,
+        })
+      );
     },
-    [userAddress, sendAndWait]
+    [userAddress, config, execute]
   );
 
   const withdraw = useCallback(
     async (vaultAddress: Address, amount: string) => {
       if (!userAddress) throw new Error('Wallet not connected');
-      const assets = parseAmount(amount);
-      await sendAndWait({
-        address: vaultAddress,
-        abi: erc4626Abi,
-        functionName: 'withdraw',
-        args: [assets, userAddress, userAddress],
-      });
+      const parsedAmount = parseAmount(amount);
+      await execute('Withdraw', () =>
+        writeContract(config, {
+          address: vaultAddress,
+          abi: erc4626Abi as any,
+          functionName: 'withdraw',
+          args: [parsedAmount, userAddress],
+          account: userAddress,
+        })
+      );
     },
-    [userAddress, sendAndWait]
+    [userAddress, config, execute]
   );
 
   const redeem = useCallback(
     async (vaultAddress: Address, amount: string) => {
       if (!userAddress) throw new Error('Wallet not connected');
-      const shares = parseAmount(amount);
-      await sendAndWait({
-        address: vaultAddress,
-        abi: erc4626Abi,
-        functionName: 'redeem',
-        args: [shares, userAddress, userAddress],
-      });
+      const parsedAmount = parseAmount(amount);
+      await execute('Redeem', () =>
+        writeContract(config, {
+          address: vaultAddress,
+          abi: erc4626Abi as any,
+          functionName: 'redeem',
+          args: [parsedAmount, userAddress],
+          account: userAddress,
+        })
+      );
     },
-    [userAddress, sendAndWait]
+    [userAddress, config, execute]
   );
 
   return {

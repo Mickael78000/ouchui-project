@@ -2,16 +2,16 @@ import { useState } from 'react';
 import type { NextPage } from 'next';
 import { type Address } from 'viem';
 import { useChainId } from 'wagmi';
-import { AppShell } from '../components/layout/AppShell';
-import { SectionHeader } from '../components/ui/SectionHeader';
-import { StatusMessage } from '../components/ui/StatusMessage';
-import { NetworkGuard } from '../components/ui/NetworkGuard';
-import { VaultSelector, type VaultOption } from '../components/investor/VaultSelector';
-import { DepositPanel } from '../components/investor/DepositPanel';
-import { WithdrawPanel } from '../components/investor/WithdrawPanel';
-import { MetricCard } from '../components/ui/MetricCard';
-import { useVaultData, fmt } from '../hooks/useVaultData';
-import { getAddresses } from '../config/contracts';
+import { AppShell } from '../shared/layout/AppShell';
+import { SectionHeader } from '../shared/ui/SectionHeader';
+import { StatusMessage } from '../shared/ui/StatusMessage';
+import { NetworkGuard } from '../shared/ui/NetworkGuard';
+import { VaultSelector, type VaultOption } from '../features/vaults/components/VaultSelector';
+import { DepositPanel } from '../features/vaults/components/DepositPanel';
+import { WithdrawPanel } from '../features/vaults/components/WithdrawPanel';
+import { MetricCard } from '../shared/ui/MetricCard';
+import { useVaultData, fmt } from '../features/vaults/hooks/useVaultData';
+import { getAddresses } from '../shared/config/contracts';
 
 const ZERO_ADDR = '0x0000000000000000000000000000000000000000' as const;
 
@@ -49,25 +49,25 @@ const Deposit: NextPage = () => {
   const selectedLabel = vaults.find((v) => v.address === selectedVault)?.label ?? 'Vault';
 
   return (
-    <AppShell title="Deposit / Withdraw — OUCHUI" description="Manage your vault positions">
+    <AppShell title="Dépôt / Retrait — OUCHUI" description="Gérez vos positions de vault">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 space-y-10">
         <SectionHeader
-          title="Deposit / Withdraw"
-          subtitle="Manage your USDC deposits and vault share positions"
+          title="Dépôt / Retrait"
+          subtitle="Gérez vos dépôts USDC et vos positions de shares de vault"
         />
 
         {/* KYC Notice */}
         <StatusMessage variant="warning">
-          <strong>KYC Requirement:</strong> Identity verification is mandatory before
-          depositing funds. This ensures regulatory compliance and secures access to the
-          protocol. Please ensure your wallet address is whitelisted before proceeding.
+          <strong>Exigence KYC :</strong> La vérification d'identité est obligatoire avant de
+          déposer des fonds. Cela garantit la conformité réglementaire et sécurise l'accès au
+          protocole. Veuillez vous assurer que votre adresse de portefeuille est sur la liste blanche avant de continuer.
         </StatusMessage>
 
         <NetworkGuard>
           {/* Vault Selector */}
           <section className="space-y-3">
             <p className="text-xs uppercase tracking-wider text-gray-500 font-medium">
-              Select Vault
+              Sélectionner le Vault
             </p>
             <VaultSelector
               vaults={vaults}
@@ -79,7 +79,7 @@ const Deposit: NextPage = () => {
           {/* Position Summary */}
           <section className="mt-8 space-y-3">
             <p className="text-xs uppercase tracking-wider text-gray-500 font-medium">
-              Your Position — {selectedLabel}
+              Votre Position — {selectedLabel}
             </p>
             <PositionSummary vaultAddress={selectedVault} label={selectedLabel} />
           </section>

@@ -1,6 +1,6 @@
 import { type Address } from 'viem';
-import { useVaultData, fmt } from '../../hooks/useVaultData';
-import { MetricCard } from '../ui/MetricCard';
+import { useVaultData, fmt } from '../../../hooks/useVaultData';
+import { MetricCard } from '../../../shared/ui/MetricCard';
 
 interface VaultSummaryCardProps {
   name: string;
@@ -37,25 +37,25 @@ export function VaultSummaryCard({ name, vaultAddress }: VaultSummaryCardProps) 
 
       <div className="grid grid-cols-2 gap-3">
         <MetricCard
-          label="Total Assets"
+          label="Actifs Totaux"
           value={fmt(totalAssets)}
           unit="USDC"
           loading={isLoading}
         />
         <MetricCard
-          label="Total Supply"
+          label="Supply Total"
           value={fmt(totalSupply)}
           unit="shares"
           loading={isLoading}
         />
         <MetricCard
-          label="Your USDC"
+          label="Vos USDC"
           value={fmt(userUsdcBalance)}
           unit="USDC"
           loading={isLoading}
         />
         <MetricCard
-          label="Your Shares"
+          label="Vos Shares"
           value={fmt(userShareBalance)}
           unit="shares"
           loading={isLoading}

@@ -1,5 +1,5 @@
 import { useAccount, useChainId, useSwitchChain } from 'wagmi';
-import { getAddresses } from '../../config/contracts';
+import { getAddresses } from '../config/contracts';
 import { StatusMessage } from './StatusMessage';
 
 interface NetworkGuardProps {

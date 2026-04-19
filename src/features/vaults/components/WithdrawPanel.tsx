@@ -1,9 +1,9 @@
 import { useState, useCallback, useEffect } from 'react';
 import { type Address, parseUnits } from 'viem';
 import { useChainId } from 'wagmi';
-import { useVaultData, fmt } from '../../hooks/useVaultData';
-import { useVaultActions, parseActionError } from '../../hooks/useVaultActions';
-import { AmountInput } from '../ui/AmountInput';
+import { useVaultData, fmt } from '../hooks/useVaultData';
+import { useVaultActions, parseActionError } from '../hooks/useVaultActions';
+import { AmountInput } from '../../../shared/ui/AmountInput';
 import { TransactionFeedback } from './TransactionFeedback';
 
 const DECIMALS = 6;
@@ -64,7 +64,7 @@ export function WithdrawPanel({ vaultAddress, vaultName }: WithdrawPanelProps) {
     if (actions.status !== 'confirmed') return;
     const t = setTimeout(() => actions.reset(), 8000);
     return () => clearTimeout(t);
-  }, [actions.status, actions.reset, actions]);
+  }, [actions.status, actions.reset]);
 
   // Inline validation
   const inputHint = (() => {
@@ -101,23 +101,23 @@ export function WithdrawPanel({ vaultAddress, vaultName }: WithdrawPanelProps) {
   return (
     <div className="rounded-xl border border-gray-800 bg-gray-900/60 p-6 space-y-5">
       <div>
-        <h3 className="text-base font-semibold text-white">Withdraw / Redeem</h3>
+        <h3 className="text-base font-semibold text-white">Retrait / Échange</h3>
         <p className="text-xs text-gray-500 mt-0.5">
-          Withdraw USDC or redeem shares from {vaultName}
+          Retirez USDC ou échangez des shares de {vaultName}
         </p>
       </div>
 
       {/* Balance Display */}
       <div className="space-y-1">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-400">Your Shares</span>
+          <span className="text-gray-400">Vos Shares</span>
           <span className="text-white font-mono">
             {isLoading ? '…' : `${fmt(userShareBalance)} shares`}
           </span>
         </div>
         {!isLoading && userShareBalance > 0n && (
           <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-400">Share value (est.)</span>
+            <span className="text-gray-400">Valeur des shares (est.)</span>
             <span className="text-white font-mono">
               {fmt(sharesValueUsdc)} USDC
             </span>
@@ -128,7 +128,7 @@ export function WithdrawPanel({ vaultAddress, vaultName }: WithdrawPanelProps) {
       {/* Zero position messaging */}
       {hasZeroPosition && (
         <p className="text-xs text-gray-500">
-          You have no shares in this vault. Deposit USDC first to receive vault shares.
+          Vous n'avez pas de shares dans ce vault. Déposez d'abord USDC pour recevoir des shares de vault.
         </p>
       )}
 
@@ -144,7 +144,7 @@ export function WithdrawPanel({ vaultAddress, vaultName }: WithdrawPanelProps) {
                   : 'bg-transparent text-gray-500 hover:text-gray-300'
               }`}
             >
-              Redeem (by shares)
+              Échanger (par shares)
             </button>
             <button
               onClick={() => { setMode('withdraw'); setAmount(''); }}
@@ -154,7 +154,7 @@ export function WithdrawPanel({ vaultAddress, vaultName }: WithdrawPanelProps) {
                   : 'bg-transparent text-gray-500 hover:text-gray-300'
               }`}
             >
-              Withdraw (by USDC amount)
+              Retrait (par montant USDC)
             </button>
           </div>
 
@@ -162,8 +162,8 @@ export function WithdrawPanel({ vaultAddress, vaultName }: WithdrawPanelProps) {
           <AmountInput
             value={amount}
             onChange={setAmount}
-            label={mode === 'withdraw' ? 'USDC Amount to Withdraw' : 'Shares to Redeem'}
-            unit={mode === 'withdraw' ? 'USDC' : 'shares'}
+            label={mode === 'redeem' ? 'Shares à Échanger' : 'USDC à Retirer'}
+            unit={mode === 'redeem' ? 'shares' : 'USDC'}
             maxValue={maxValue}
             decimals={DECIMALS}
             disabled={actions.isPending}
@@ -175,7 +175,7 @@ export function WithdrawPanel({ vaultAddress, vaultName }: WithdrawPanelProps) {
           {parsedAmount > 0n && !exceedsPosition && !exceedsShares && (
             <div className="flex items-center justify-between text-sm rounded-lg bg-gray-800/50 px-3 py-2">
               <span className="text-gray-400">
-                {mode === 'withdraw' ? 'Shares to burn (est.)' : 'USDC to receive (est.)'}
+                {mode === 'withdraw' ? 'Shares à brûler (est.)' : 'USDC à recevoir (est.)'}
               </span>
               <span className="text-white font-mono">
                 {mode === 'withdraw'
@@ -198,8 +198,8 @@ export function WithdrawPanel({ vaultAddress, vaultName }: WithdrawPanelProps) {
             className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             {actions.isPending
-              ? `${mode === 'withdraw' ? 'Withdrawing' : 'Redeeming'}…`
-              : mode === 'withdraw' ? 'Withdraw USDC' : 'Redeem Shares'}
+              ? `${mode === 'withdraw' ? 'Retrait' : 'Échange'}…`
+              : mode === 'withdraw' ? 'Retirer USDC' : 'Échanger Shares'}
           </button>
         </>
       )}

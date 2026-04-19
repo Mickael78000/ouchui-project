@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useReadContracts, useAccount } from 'wagmi';
 import { type Address, formatUnits, parseUnits } from 'viem';
-import { erc4626Abi, mockUsdcAbi, getAddresses } from '../config/contracts';
+import { erc4626Abi, mockUsdcAbi, getAddresses } from '../shared/config/contracts';
 
 const DECIMALS = 6;
 const ZERO_ADDR = '0x0000000000000000000000000000000000000000' as const;
@@ -147,8 +147,10 @@ export function useVaultData(
 }
 
 export function fmt(value: bigint, decimals = DECIMALS, digits = 4): string {
-  return parseFloat(formatUnits(value, decimals)).toLocaleString('en-US', {
-    minimumFractionDigits: 0,
+  const formatted = parseFloat(formatUnits(value, decimals)).toLocaleString('en-US', {
+    minimumFractionDigits: 4,
     maximumFractionDigits: digits,
   });
+  // Replace comma with space for thousands separator and decimal point with comma
+  return formatted.replace(/,/g, ' ').replace(/\./g, ',');
 }
