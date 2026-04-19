@@ -11,10 +11,10 @@ export type ContractAddresses = {
 
 const addressesByChain: Record<number, ContractAddresses> = {
   11155111: {
-    mockUsdc: '0x1DbA4d24ED6f691D2658D87EEe3D1e4Aff2867f6' as Address,
-    vaultT: '0xde917990251927855D050D02B973a5e7eE3D3E2f' as Address,
-    vaultD: '0x2515b8b5121C5C55Df77028E6729D0a9bC871cA2' as Address,
-    vaultMockYield: '0x49362cf0a1Bc54801Ded60Fda5be2BCAefC03eb6' as Address,
+    mockUsdc: '0x5561791E7Edb27640766A38f701757952Da1ddB5' as Address,
+    vaultT: '0x66399b7361315720A52604d791a04DA4D652F45C' as Address,
+    vaultD: '0xd6CC0227Fe2813049bf87203498Eb8971AB47965' as Address,
+    vaultMockYield: '0x4eA6E1cBc40B13873e314db5148d85107c70F689' as Address,
   },
   31337: {
     mockUsdc: '0x9CAD4C0E7feF1C566d619aFAb3F89CA0aA88c526' as Address,
