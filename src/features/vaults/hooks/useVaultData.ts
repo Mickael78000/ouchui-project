@@ -148,7 +148,6 @@ export function useVaultData(
     totalSupply,
     userShareBalance,
     assetAddressResult,
-    allowance,
     previewDeposit,
     previewRedeem,
     previewWithdraw,
