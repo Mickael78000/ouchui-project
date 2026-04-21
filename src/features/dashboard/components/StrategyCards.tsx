@@ -1,21 +1,21 @@
 const strategies = [
   {
-    title: 'Tranche T — Treasury Optimization',
+    title: 'Tranche T — Optimisation de Trésorerie',
     description:
-      'Capital allocated to tokenized T-Bills for stable, low-risk yield generation. Serves as the primary liquidity reserve for investor withdrawals.',
-    status: 'Scaffold — pending T-Bill integration',
+      'Capital alloué aux T-Bills tokenisés pour une génération de rendement stable et peu risquée. Sert de réserve de liquidité principale pour les retraits des investisseurs.',
+    status: 'Scaffold — intégration T-Bills en attente',
   },
   {
-    title: 'Tranche D — Direct Deployment',
+    title: 'Tranche D — Déploiement Direct',
     description:
-      'Capital deployed to fund healthcare equipment installations. Returns driven by subscription revenue from hospital clients.',
-    status: 'Scaffold — pending operational deployment',
+      'Capital déployé pour financer les installations d\'équipements médicaux. Rendements générés par les revenus d\'abonnement des établissements hospitaliers clients.',
+    status: 'Scaffold — déploiement opérationnel en attente',
   },
   {
-    title: 'Lending Loop',
+    title: 'Boucle de Prêt',
     description:
-      'T-Bill positions used as collateral to borrow additional USDC, creating a capital-efficient yield amplification cycle.',
-    status: 'Scaffold — pending lending protocol integration',
+      'Les positions T-Bills utilisées comme collatéral pour emprunter des USDC supplémentaires, créant un cycle d\'amplification de rendement efficace en capital.',
+    status: 'Scaffold — intégration protocole de prêt en attente',
   },
 ];
 

@@ -5,7 +5,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 const navItems = [
   { href: '/', label: 'OUCHUI' },
   { href: '/dashboard', label: 'Dashboard' },
-  { href: '/deposit', label: 'Deposit / Withdraw' },
+  { href: '/deposit', label: 'Dépôt/Retrait' },
 ];
 
 export function MainNav() {

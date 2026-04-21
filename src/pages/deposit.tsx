@@ -99,18 +99,18 @@ const Deposit: NextPage = () => {
           {/* Compliance Notices */}
           <section className="mt-8 space-y-3">
             <p className="text-xs uppercase tracking-wider text-gray-500 font-medium">
-              Compliance & Security
+              Conformité & Sécurité
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <StatusMessage variant="info">
-                <strong>Smart Contract Risk:</strong> All deposits interact directly
-                with on-chain ERC-4626 vault contracts. There is no intermediary and no
-                guarantee of principal. Review the contract source before depositing.
+                <strong>Risque Smart Contract :</strong> Tous les dépôts interagissent directement
+                avec les contrats de vault ERC-4626 on-chain. Il n&apos;y a pas d&apos;intermédiaire et aucune
+                garantie sur le capital. Vérifiez le code source du contrat avant de déposer.
               </StatusMessage>
               <StatusMessage variant="info">
-                <strong>Withdrawal Liquidity:</strong> Withdrawals are served from the
-                vault&apos;s liquidity reserve. During periods of high capital deployment,
-                withdrawal availability may be limited.
+                <strong>Liquidité des Retraits :</strong> Les retraits sont servis depuis la
+                réserve de liquidité du vault. En période de fort déploiement du capital,
+                la disponibilité des retraits peut être limitée.
               </StatusMessage>
             </div>
           </section>
