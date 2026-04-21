@@ -140,7 +140,7 @@ export function useVaultActions(): VaultActionsState {
           address: vaultAddress,
           abi: erc4626Abi as any,
           functionName: 'withdraw',
-          args: [parsedAmount, userAddress],
+          args: [parsedAmount, userAddress, userAddress],
           account: userAddress,
         })
       );
